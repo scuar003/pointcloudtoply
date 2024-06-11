@@ -21,9 +21,16 @@ add_executable(pcl_converter_node src/pctoply.cpp)
 ament_target_dependencies(pcl_converter_node rclcpp sensor_msgs pcl_conversions)
 target_link_libraries(pcl_converter_node ${PCL_LIBRARIES})
 
+add_executable(pcl_processing src/cloud_processing.cpp)
+
+# Link libraries
+ament_target_dependencies(pcl_processing rclcpp sensor_msgs pcl_conversions)
+target_link_libraries(pcl_processing ${PCL_LIBRARIES})
+
 # Install targets
 install(TARGETS
   pcl_converter_node
+  pcl_processing
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
