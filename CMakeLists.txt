@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 project(pointcloudtoply)
 
+# Set the policy to suppress the warning
+cmake_policy(SET CMP0074 NEW)
+
 # Find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -14,23 +17,24 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
 )
 
-# Add the executable
+# Add the first executable for pcl_converter_node
 add_executable(pcl_converter_node src/pctoply.cpp)
 
-# Link libraries
+# Link libraries to pcl_converter_node
 ament_target_dependencies(pcl_converter_node rclcpp sensor_msgs pcl_conversions)
 target_link_libraries(pcl_converter_node ${PCL_LIBRARIES})
 
-add_executable(pcl_processing src/cloud_processing.cpp)
+# Add the second executable for pc_udp_sender
+add_executable(pc_udp_sender src/pc_udp_sender.cpp)
 
-# Link libraries
-ament_target_dependencies(pcl_processing rclcpp sensor_msgs pcl_conversions)
-target_link_libraries(pcl_processing ${PCL_LIBRARIES})
+# Link libraries to pc_udp_sender
+ament_target_dependencies(pc_udp_sender rclcpp sensor_msgs pcl_conversions)
+target_link_libraries(pc_udp_sender ${PCL_LIBRARIES})
 
 # Install targets
 install(TARGETS
+  pc_udp_sender
   pcl_converter_node
-  pcl_processing
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
